@@ -94,7 +94,7 @@ def one_round( bet )
 	# Loop until player is done.
 	while player_done == 0 
 		
-		# Get suggesting from Basic Strategy
+		# Get suggestion from Basic Strategy
 		suggestion = basic_strategy( banker_hand , player_hand , player_hassplit )
 
 		#puts "Suggestion : #{ decode( suggestion) }"
@@ -138,7 +138,7 @@ def one_round( bet )
 		player_done = 0
 		while player_done == 0
 
-			# Get suggesting from Basic Strategy
+			# Get suggestion from Basic Strategy
 			suggestion = basic_strategy( banker_hand , player_split_hand , 1 )
 
 			# HIT
