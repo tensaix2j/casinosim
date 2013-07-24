@@ -9,24 +9,19 @@
 		
 		win = rand(2) 
 		print win == 1 ? "W":"L"
-
-		if win == 1
-			
-			capital += bet
-			bet = initial_bet
-			
-			streak = 0
-			
-		else
+		
+		if win == 0
 			capital -= bet
+			bet = initial_bet
+			streak = 0
+		else
+			capital += bet
 			bet *= 2
+
 			streak += 1
 			break if streak >= 10
-		
-		
 		end
 
-		
 		
 	}
 
