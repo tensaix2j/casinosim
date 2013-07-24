@@ -7,10 +7,11 @@
 
 	(0...1024).each { |x|
 		
-		win = rand(2) 
-		print win == 1 ? "W":"L"
-		
-		if win == 0
+		win = (rand() >= 0.55)
+
+		print win ? "W":"L"
+
+		if win 
 			capital -= bet
 			bet = initial_bet
 			streak = 0

@@ -7,10 +7,11 @@
 
 	(0...1024).each { |x|
 		
-		win = rand(2) 
-		print win == 1 ? "W":"L"
+		win = rand() >= 0.55
 
-		if win == 1
+		print win ? "W":"L"
+
+		if win
 			
 			capital += bet
 			bet = initial_bet
