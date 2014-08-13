@@ -14,7 +14,8 @@
 
 	$config = {
 		"-dist" => "normal",
-		"-stdev" => 0.12
+		"-stdev" => 0.05,
+		"-skip" => 10
 	}
 
 	$config = $config.merge( Hash[*ARGV] )
@@ -54,6 +55,7 @@
 	bet 				= [ 1, 1, 1 , 1]
 	alive 				= [ 1, 1, 1 , 1]
 	skip 				= [ 0, 0, 0 , 0]
+	skip_trigger		= [ $config["-skip"].to_i ] * skip.length
 
 	
 	(0...luck_arr.length).each { |i|
@@ -70,7 +72,7 @@
 							capital[profile] += bet[profile]
 						else
 							capital[profile] -= bet[profile]
-							skip[profile] = 10
+							skip[profile] = skip_trigger[profile]
 						end
 					else
 						skip[profile] -= 1
@@ -108,7 +110,7 @@
 							capital[profile] += bet[profile]
 						else
 							capital[profile] -= bet[profile]
-							skip[profile] = 10
+							skip[profile] = skip_trigger[profile]
 						end
 					else
 						skip[profile] -= 1
