@@ -25,7 +25,6 @@
 
 	while luck_arr.length < 100000
 		
-		# If length of all luck streaks are equally distributed.
 		if $config["-dist"] == "normal"
 			streaklen = ( gaussian( 1, $config["-stdev"].to_f , lambda { Kernel.rand } )[0] * 100 - 99 ).abs.round 
 		else
@@ -50,6 +49,7 @@
 	# 2: Flat Bet 
 	# 3: Staged Luckstreak
 
+	label 				= ["Flat LS", "Martingale", "Flat Bet", "Staged LS"]
 	capital 			= [ 100 , 100 , 100 , 100 ]
 	bet 				= [ 1, 1, 1 , 1]
 	alive 				= [ 1, 1, 1 , 1]
@@ -123,9 +123,12 @@
 
 	}
 
-	capital.each { |cap|
+	capital.each_index { |cap_i |
+
+		cap = capital[ cap_i ]
+		lbl = label[ cap_i ]
 		
-		puts "Capital #{cap}"
+		puts "Capital #{lbl} #{cap}"
 
 	}
 
