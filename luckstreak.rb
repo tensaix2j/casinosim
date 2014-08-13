@@ -21,6 +21,7 @@
 
 
 	luck_arr = []
+	streaklen_cnt = {}
 
 	while luck_arr.length < 100000
 		
@@ -31,6 +32,10 @@
 			streaklen = rand(100)
 		end	
 
+		streaklen = 1 if streaklen == 0
+		streaklen_cnt[ streaklen ] = 0 if streaklen_cnt[ streaklen ] == nil
+		streaklen_cnt[ streaklen ] += 1
+
 
 		luck = rand(2)
 		(0...streaklen).each { |i|
@@ -38,27 +43,91 @@
 		}	
 	end
 
-	capital = 100
-	skip = 0
+	
 
+	# 0: Luckstreak strat
+	# 1: Martingale
+	# 2: Flat Bet 
+	# 3: Staged Luckstreak
+
+	capital 			= [ 100 , 100 , 100 , 100 ]
+	bet 				= [ 1, 1, 1 , 1]
+	alive 				= [ 1, 1, 1 , 1]
+	skip 				= [ 0, 0, 0 , 0]
+
+	
 	(0...luck_arr.length).each { |i|
 
-		if skip <= 0 
-			bet = 1
-			if luck_arr[i] == 1
-				capital += bet
-			else
-				capital -= bet
-				skip = 10
-			end
-		else
-			skip -= 1
-		end
+		(0..3).each { | profile|
 
-		if capital <= 0 
-			break
-		end		
+			if alive[profile] == 1
+
+				# Luck streak strat
+				if profile == 0
+						
+					if skip[profile] <= 0 
+						if luck_arr[i] == 1
+							capital[profile] += bet[profile]
+						else
+							capital[profile] -= bet[profile]
+							skip[profile] = 10
+						end
+					else
+						skip[profile] -= 1
+					end
+				
+				# Martingale strat
+				elsif profile == 1
+
+					if luck_arr[i] == 1
+						capital[profile] += bet[profile]
+						bet[profile]    =  1	
+					else
+						capital[profile] -= bet[profile]
+						bet[profile]     *= 2
+					end	
+				
+				# Flat bet strat
+				elsif profile == 2
+
+					if luck_arr[i] == 1
+						capital[profile] += bet[profile]
+					else
+						capital[profile] -= bet[profile]
+					end	
+
+
+				# Staged	
+				elsif  profile == 3
+					
+
+					if skip[profile] <= 0 
+
+						bet[profile] = capital[profile] / 50
+						if luck_arr[i] == 1
+							capital[profile] += bet[profile]
+						else
+							capital[profile] -= bet[profile]
+							skip[profile] = 10
+						end
+					else
+						skip[profile] -= 1
+					end			
+
+				end
+				
+				alive[profile] = 0 if capital[profile] <= 0 
+				
+			end
+		}
 
 	}
 
-	puts capital
+	capital.each { |cap|
+		
+		puts "Capital #{cap}"
+
+	}
+
+	puts "\nStreak Length Distribution"
+	p streaklen_cnt
