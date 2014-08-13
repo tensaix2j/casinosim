@@ -15,7 +15,8 @@
 	$config = {
 		"-dist" => "normal",
 		"-stdev" => 0.05,
-		"-skip" => 10
+		"-skip" => 10,
+		"-houseedge" => 3
 	}
 
 	$config = $config.merge( Hash[*ARGV] )
@@ -36,8 +37,10 @@
 		streaklen_cnt[ streaklen ] = 0 if streaklen_cnt[ streaklen ] == nil
 		streaklen_cnt[ streaklen ] += 1
 
+		# Put 3 % house edge into consideration
+		luck = rand(100) < ( 50 - $config["-houseedge"].to_i ) ? 1 : 0
 
-		luck = rand(2)
+
 		(0...streaklen).each { |i|
 			luck_arr << luck
 		}	
