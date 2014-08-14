@@ -51,19 +51,20 @@
 	# 0: Luckstreak strat
 	# 1: Martingale
 	# 2: Flat Bet 
-	# 3: Staged Luckstreak
+	# 3: Compound Luckstreak
+	# 4: Anti Martingale
 
-	label 				= ["Flat LS", "Martingale", "Flat Bet", "Staged LS"]
-	capital 			= [ 100 , 100 , 100 , 100 ]
-	bet 				= [ 1, 1, 1 , 1]
-	alive 				= [ 1, 1, 1 , 1]
-	skip 				= [ 0, 0, 0 , 0]
+	label 				= ["Flat LS", "Martingale", "Flat Bet", "CLS", "Antimartingale"]
+	capital 			= [ 100 , 100 , 100 , 100 , 100]
+	bet 				= [ 1, 1, 1 , 1, 1]
+	alive 				= [ 1, 1, 1 , 1, 1]
+	skip 				= [ 0, 0, 0 , 0, 0]
 	skip_trigger		= [ $config["-skip"].to_i ] * skip.length
 
 	
 	(0...luck_arr.length).each { |i|
 
-		(0..3).each { | profile|
+		capital.each_index { | profile|
 
 			if alive[profile] == 1
 
@@ -84,12 +85,21 @@
 				# Martingale strat
 				elsif profile == 1
 
+
 					if luck_arr[i] == 1
 						capital[profile] += bet[profile]
 						bet[profile]    =  1	
+						skip[profile]  = 0
+					
 					else
 						capital[profile] -= bet[profile]
 						bet[profile]     *= 2
+
+						skip[profile] += 1
+						if skip[profile] >= skip_trigger[profile] 
+							bet[profile] = 1
+							skip[profile] = 0
+						end
 					end	
 				
 				# Flat bet strat
@@ -102,7 +112,7 @@
 					end	
 
 
-				# Staged	
+				# Compount LS
 				elsif  profile == 3
 					
 
@@ -118,6 +128,26 @@
 					else
 						skip[profile] -= 1
 					end			
+
+				# Pure Anti Martingale	
+				elsif  profile == 4
+					
+					
+					if luck_arr[i] == 1
+						capital[profile] += bet[profile]
+						bet[profile]     *= 2
+
+						skip[profile] += 1
+						if skip[profile] >= skip_trigger[profile] 
+							bet[profile] = 1
+							skip[profile] = 0
+						end
+					else
+						capital[profile] -= bet[profile]
+						bet[profile]     = 1	
+						skip[profile]    = 0
+						
+					end		
 
 				end
 				
